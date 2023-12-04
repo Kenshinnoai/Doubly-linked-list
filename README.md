@@ -1,2 +1,2 @@
-# Doubly-connected-edge-list
+# Doubly-linked-list
  my first repository
