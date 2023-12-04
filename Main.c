@@ -18,7 +18,7 @@ Node *cr_node(int data)
     return somnod;
 }
 
-int list_out(Node *head)
+void list_out(Node *head)
 {
     Node *cur = head;
     while(cur != NULL)
@@ -51,7 +51,7 @@ Node *node_add_begin(Node *head, int data)
     return l;
 }
 
-int node_insert(Node* fromlstnod, Node* newnode)
+void node_insert(Node* fromlstnod, Node* newnode)
 {
     Node* nextnode = fromlstnod->next;
     newnode->next = nextnode;
