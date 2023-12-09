@@ -1,5 +1,6 @@
 #include "list.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 struct Node
 {
@@ -8,8 +9,7 @@ struct Node
     int value;
 };
 
-
-Node* cr_node(int data)
+Node* list_create_node(int data)
 {
     Node* somnod;
     somnod = (Node*)malloc(sizeof(Node));
@@ -21,59 +21,40 @@ Node* cr_node(int data)
 
 void list_out(Node* head)
 {
-    Node* cur = head;
-    while (cur != NULL)
+    while (head != NULL)
     {
-        printf("%d\n", cur->value);
-        cur = cur->next;
+        printf("%d\n", head->value);
+        head = head->next;
     }
 }
-
 
 void list_delete(Node* head)
 {
-    Node* curr = head;
-    Node* nextnd = NULL;
-    while (curr != NULL)
+    Node* next = NULL;
+
+    while (head != NULL)
     {
-        nextnd = curr->next;
-        free(curr);
-        curr = curr->next;
+        next = head->next;
+        free(head);
+        head = next;
     }
 }
 
-
-void delete_node(Node* node, Node* head)
+void list_delete_node(Node* node)
 {
-    Node* nextNeeded = node->next;
-    Node* prevNeeded = node->prev;
-    if (nextNeeded == NULL)
-    {
-        if (prevNeeded->prev == NULL)
-        {
-            prevNeeded = head;
-        }
-        prevNeeded->next = NULL;
-    }
-    else
-    {
-        nextNeeded->prev = prevNeeded;
-    }
+    Node* next = node->next;
+    Node* prev = node->prev;
 
-    if (prevNeeded == NULL)
-    {
-        if (nextNeeded->next == NULL)
-        {
-            nextNeeded = head;
-        }
-        nextNeeded->prev = NULL;
-    }
-    else
-    {
-        prevNeeded->next = nextNeeded;
-    }
+    free(node);
+
+    if (prev)
+        prev->next = next;
+
+    if (next)
+        next->prev = prev;
 }
-Node* node_add_begin(Node* head, int data)
+
+Node* list_prepend(Node* head, int data)
 {
     Node* l;
     l = (Node*)malloc(sizeof(Node*));
@@ -84,16 +65,32 @@ Node* node_add_begin(Node* head, int data)
     return l;
 }
 
-
-void node_insert(Node* fromlstnod, Node* newnode)
+Node* list_append(Node* head, int data)
 {
-    Node* nextnode = fromlstnod->next;
-    newnode->next = nextnode;
-    newnode->prev = fromlstnod;
-    fromlstnod->next = newnode;
-    if (nextnode != NULL)
-    {
-        nextnode->prev = newnode;
-        nextnode->next = NULL;
-    }
+    Node* tail = head;
+    Node* node;
+
+    if (head == NULL)
+        return NULL;
+
+    /* Ищем конец списка */
+    while (tail->next)
+        tail = tail->next;
+
+    node = list_create_node(data);
+
+    list_insert(tail, node);
+
+    return node;
+}
+
+void list_insert(Node* insnode, Node* newnode)
+{
+    newnode->next = insnode->next;
+    newnode->prev = insnode;
+
+    insnode->next = newnode;
+
+    if (newnode->next != NULL)
+        newnode->next->prev = newnode;
 }

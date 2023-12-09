@@ -1,23 +1,27 @@
 #ifndef MYLIB_H
-
 #define MYLIB_H
-
-#include <stdlib.h>
-
 
 typedef struct Node Node;
 
-Node *cr_node(int data);
+/* Создание элемента списка. */
+extern Node* list_create_node(int data);
 
-void list_out(Node *head);
+/* Вставка в начало списка. */
+extern Node* list_prepend(Node *head, int data);
 
-void list_delete(Node *head);
+/* Вставка в конец списка. */
+extern Node* list_append(Node *head, int data);
 
-Node *node_add_begin(Node *head, int data);
+/* Вставка после insnode. */
+extern void list_insert(Node* insnode, Node* newnode);
 
-void node_insert(Node* fromlstnod, Node* newnode);
+/* Удаление всего списка. */
+extern void list_delete(Node *head);
 
-void delete_node (Node* node, Node* head);
+/* Удаление элемента списка. */
+extern void list_delete_node(Node* node);
 
+/* Вывод списка поэлементно на экран. */
+extern void list_out(Node *head);
 
-#endif
+#endif // MYLIB_H
