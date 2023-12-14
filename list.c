@@ -21,7 +21,7 @@ Node* list_create_node(int data)
 
 void list_out(Node* head)
 {
-    while (head != NULL)
+    while (head)
     {
         printf("%d\n", head->value);
         head = head->next;
@@ -30,13 +30,11 @@ void list_out(Node* head)
 
 void list_delete(Node* head)
 {
-    Node* next = NULL;
 
-    while (head != NULL)
+    while (head)
     {
-        next = head->next;
         free(head);
-        head = next;
+        head = head->next;
     }
 }
 
@@ -57,11 +55,10 @@ void list_delete_node(Node* node)
 Node* list_prepend(Node* head, int data)
 {
     Node* l;
-    l = (Node*)malloc(sizeof(Node*));
-    l = head->prev;
+    l = list_create_node(data);
+    head->prev = l;
     l->next = head;
     l->prev = NULL;
-    l->value = data;
     return l;
 }
 
@@ -70,7 +67,7 @@ Node* list_append(Node* head, int data)
     Node* tail = head;
     Node* node;
 
-    if (head == NULL)
+    if (!head)
         return NULL;
 
     /* Ищем конец списка */
@@ -91,6 +88,6 @@ void list_insert(Node* insnode, Node* newnode)
 
     insnode->next = newnode;
 
-    if (newnode->next != NULL)
+    if (newnode->next)
         newnode->next->prev = newnode;
 }
