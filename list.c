@@ -30,11 +30,12 @@ void list_out(Node* head)
 
 void list_delete(Node* head)
 {
-
+    Node* next = NULL;
     while (head)
     {
+        next = head->next;
         free(head);
-        head = head->next;
+        head = next;
     }
 }
 
