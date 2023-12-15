@@ -19,7 +19,7 @@ Node* list_create_node(int data)
     return somnod;
 }
 
-void list_out(Node* head)
+void list_out(Node *head)
 {
     while (head)
     {
@@ -28,7 +28,7 @@ void list_out(Node* head)
     }
 }
 
-void list_delete(Node* head)
+void list_delete(Node *head)
 {
     Node* next = NULL;
     while (head)
@@ -39,7 +39,7 @@ void list_delete(Node* head)
     }
 }
 
-void list_delete_node(Node* node)
+void list_delete_node(Node *node)
 {
     Node* next = node->next;
     Node* prev = node->prev;
@@ -53,7 +53,7 @@ void list_delete_node(Node* node)
         next->prev = prev;
 }
 
-Node* list_prepend(Node* head, int data)
+Node* list_prepend(Node *head, int data)
 {
     Node* l;
     l = list_create_node(data);
@@ -63,7 +63,7 @@ Node* list_prepend(Node* head, int data)
     return l;
 }
 
-Node* list_append(Node* head, int data)
+Node* list_append(Node *head, int data)
 {
     Node* tail = head;
     Node* node;
@@ -82,7 +82,7 @@ Node* list_append(Node* head, int data)
     return node;
 }
 
-void list_insert(Node* insnode, Node* newnode)
+void list_insert(Node *insnode, Node *newnode)
 {
     newnode->next = insnode->next;
     newnode->prev = insnode;
