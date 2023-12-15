@@ -13,13 +13,13 @@ extern Node* list_prepend(Node *head, int data);
 extern Node* list_append(Node *head, int data);
 
 /* Вставка после insnode. */
-extern void list_insert(Node* insnode, Node* newnode);
+extern void list_insert(Node *insnode, Node *newnode);
 
 /* Удаление всего списка. */
 extern void list_delete(Node *head);
 
 /* Удаление элемента списка. */
-extern void list_delete_node(Node* node);
+extern void list_delete_node(Node *node);
 
 /* Вывод списка поэлементно на экран. */
 extern void list_out(Node *head);
