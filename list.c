@@ -9,8 +9,11 @@ struct Node
     int value;
 };
 
-Node* list_create_node(int data)
+Node* list_create_node()
 {
+    int data;
+    printf("Enter the number to put it into new node\n");
+    scanf("%d", &data);
     Node* somnod;
     somnod = (Node*)malloc(sizeof(Node));
     somnod->prev = NULL;
@@ -91,4 +94,83 @@ void list_insert(Node *insnode, Node *newnode)
 
     if (newnode->next)
         newnode->next->prev = newnode;
+}
+
+int choice()
+{
+    int num = 10;
+    int i;
+    while (num != 0)
+    {
+         printf("
+         scanf("%d", &sign);
+		       switch(sign)
+		       {
+		           case 0:
+
+             printf("Program finished\n");
+             return 0;
+
+
+             case 1:
+            
+             i++;
+             list_create_node();
+             printf("Node %d created", i);
+             break;
+
+
+             case 2:
+
+             printf("Your list:\n");
+             list_out();
+             break;
+
+
+             case 3:
+             
+             int k;
+             printf("Are you sure to delete the list? (1 - yes, 0 - no\t");
+             scanf("%d", &k);
+             k == 1 ? list_delete(Node *head) : break;
+             break;
+           
+
+             case 4:
+
+             int k;
+             printf("Are you sure to delete the node? (1 - yes, 0 - no\t");
+             scanf("%d", &k);
+             k == 1 ? list_delete_node(Node *node) : break;
+             break;
+
+
+             case 5:
+
+             list_prepend(Node *head, int data);
+             printf("New node added into beginning of list\n");
+             break;
+
+
+             case 6:
+
+             list_append(Node *head, int data);
+             printf("New node added into the end of list\n");
+             break;
+
+
+             case 7:
+
+             list_insert(Node *insnode, Node *newnode);
+             printf("Node is inserted\n");
+             break;
+
+
+             default:
+
+             printf("Try again, put there numbers to choose something\n");
+             break;
+         }
+    }
+    return 0;
 }
