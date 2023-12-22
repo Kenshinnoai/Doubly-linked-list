@@ -4,7 +4,7 @@
 typedef struct Node Node;
 
 /* Создание элемента списка. */
-extern Node* list_create_node(int data);
+extern Node* list_create_node();
 
 /* Вставка в начало списка. */
 extern Node* list_prepend(Node *head, int data);
