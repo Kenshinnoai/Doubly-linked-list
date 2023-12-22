@@ -24,4 +24,7 @@ extern void list_delete_node(Node *node);
 /* Вывод списка поэлементно на экран. */
 extern void list_out(Node *head);
 
+/* Меню для манипуляции функциями через консоль */
+extern int choice();
+
 #endif // MYLIB_H
