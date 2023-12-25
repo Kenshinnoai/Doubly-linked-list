@@ -7,10 +7,10 @@ typedef struct Node Node;
 extern Node* list_create_node();
 
 /* Вставка в начало списка. */
-extern Node* list_prepend(Node *head, int data);
+extern Node* list_prepend(Node *head);
 
 /* Вставка в конец списка. */
-extern Node* list_append(Node *head, int data);
+extern Node* list_append(Node *head);
 
 /* Вставка после insnode. */
 extern void list_insert(Node *insnode, Node *newnode);
