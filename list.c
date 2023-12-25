@@ -9,17 +9,34 @@ struct Node
     int value;
 };
 
-Node* list_create_node()
+List* list_create()
 {
-    int data;
-    printf("Enter the number to put it into new node\n");
-    scanf("%d", &data);
-    Node* somnod;
-    somnod = (Node*)malloc(sizeof(Node));
-    somnod->prev = NULL;
-    somnod->next = NULL;
-    somnod->value = data;
-    return somnod;
+    List* list = (List*)malloc(sizeof(List));
+    list_init(list);
+    return list;
+}
+
+void list_init(List* list)
+{
+    if (list)
+    {
+        list->head = NULL;
+        list->tail = NULL;
+    }
+}
+
+Node* list_create_node(int data)
+{
+    Node* node = (Node*)malloc(sizeof(Node));
+
+    if (node)
+    {
+        node->prev = NULL;
+        node->next = NULL;
+        node->value = data;
+    }
+
+    return node;
 }
 
 void list_out(Node *head)
@@ -56,17 +73,21 @@ void list_delete_node(Node *node)
         next->prev = prev;
 }
 
-Node* list_prepend(Node *head)
+int list_prepend(List* list, int data)
 {
-    int data;
-    printf("Enter the number to prepend\n");
-    scanf("%d", &data);
-    Node* l;
-    l = list_create_node(data);
-    head->prev = l;
-    l->next = head;
-    l->prev = NULL;
-    return l;
+    Node* node;
+
+    if (list == NULL)
+        return -1;
+
+    node = list_create_node(data);
+    if (node == NULL)
+        return -1;
+
+    node->next = list->head;
+    list->head = node;
+
+    return 0;
 }
 
 Node* list_append(Node *head)
@@ -119,7 +140,7 @@ int choice()
 
 
              case 1:
-            
+
              i++;
              list_create_node();
              printf("Node %d created", i);
@@ -134,13 +155,13 @@ int choice()
 
 
              case 3:
-             
+
              int k;
              printf("Are you sure to delete the list? (1 - yes, 0 - no\t");
              scanf("%d", &k);
              k == 1 ? list_delete(Node *head) : break;
              break;
-           
+
 
              case 4:
 
