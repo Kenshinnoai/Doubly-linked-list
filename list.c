@@ -56,8 +56,11 @@ void list_delete_node(Node *node)
         next->prev = prev;
 }
 
-Node* list_prepend(Node *head, int data)
+Node* list_prepend(Node *head)
 {
+    int data;
+    printf("Enter the number to prepend\n");
+    scanf("%d", &data);
     Node* l;
     l = list_create_node(data);
     head->prev = l;
@@ -66,8 +69,11 @@ Node* list_prepend(Node *head, int data)
     return l;
 }
 
-Node* list_append(Node *head, int data)
+Node* list_append(Node *head)
 {
+    int data;
+    printf("Enter the number to append\n");
+    scanf("%d", &data);
     Node* tail = head;
     Node* node;
 
@@ -147,14 +153,14 @@ int choice()
 
              case 5:
 
-             list_prepend(Node *head, int data);
+             list_prepend(Node *head);
              printf("New node added into beginning of list\n");
              break;
 
 
              case 6:
 
-             list_append(Node *head, int data);
+             list_append(Node *head);
              printf("New node added into the end of list\n");
              break;
 
