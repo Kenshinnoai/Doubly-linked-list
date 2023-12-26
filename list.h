@@ -3,11 +3,27 @@
 
 typedef struct Node Node;
 
-/* Создание элемента списка. */
-extern Node* list_create_node();
+typedef struct List
+{
+    Node* head;
+    Node* tail;
+} List;
 
-/* Вставка в начало списка. */
-extern Node* list_prepend(Node *head);
+/* Создание элемента списка. */
+extern Node* list_create_node(int data);
+
+/* Создает пустой список. */
+extern List* list_create();
+
+extern void list_init(List* list);
+
+/* Проверяет, пустой ли список. */
+extern int list_is_empty(List* list);
+
+/* Вставка в начало списка.
+ * Возвращает 0 в случае успеха, либо не ноль в случае ошибки.
+ */
+extern int list_prepend(List* list, int data);
 
 /* Вставка в конец списка. */
 extern Node* list_append(Node *head);

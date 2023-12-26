@@ -39,3 +39,16 @@ static void test_long_list(void)
 
     list_out(head);
 }
+
+void test_2(void)
+{
+    List list;
+    list_init(&list);
+    list_prepend(&list, ...);
+}
+
+void test_3(void)
+{
+    List* list = list_create();
+    list_prepend(list, ...);
+}
