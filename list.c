@@ -247,7 +247,7 @@ int choice()
     int i = 0;
     int sign, k;
 
-    List* list = create_list();
+    List* list;
     list_init(list);
 
 
