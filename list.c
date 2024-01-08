@@ -26,32 +26,25 @@ List* list_create()
     List* list = (List*)malloc(sizeof(List));
     list_init(list);
     return list;
-}
+};
 
 
 /*Проверка на пустоту списка;
-1 - если список пуст, 2 - если в списке что-то есть 
-в функцию передаём весь список*/   
+1 - если список пуст, 2 - если в списке что-то есть
+в функцию передаём весь список*/
 
-int list_is_empty(List* list)
-{   
+void list_is_empty(List* list)
+{
     Node* node = list->head;
-	if (node == NULL)
-	{
-		printf("Your list is empty\v");
-		return 1;
-	}
+    if (node == NULL)
+        printf("Your list is empty\n");
+    else
+        printf("Your list isn't empty\n");
 
-	else 
-	{
-		printf("Your list isn't empty\v");
-		return 0;
-	}
-
-}
+};
 
 
-/*Началу и концу списка присваивается NULL*/        
+/*Началу и концу списка присваивается NULL*/
 
 void list_init(List* list)
 {
@@ -61,10 +54,10 @@ void list_init(List* list)
         list->tail = NULL;
     }
 
-}
+};
 
 
-/*Создаем новый узел*/      
+/*Создаем новый узел*/
 
 Node* list_create_node()
 {
@@ -83,104 +76,102 @@ Node* list_create_node()
     }
 
     return node;
-}
+};
 
 
-/*Вывод списка*/            
+/*Вывод списка*/
 
 void list_out(List* list)
 {
     int i = 0;
-    while (list->head->next)
+    Node* head = list->head;
+    while (head)
     {
-        printf("node %d: %d\n", i, list->head->value);
-        list->head = list->head->next;
+        printf("node %d: %d\n", i, head->value);
+        head = head->next;
     }
 
-}
+};
 
 
-/*Удаление всего списка*/       
+/*Удаление всего списка*/
 void list_delete(List* list)
 {
     Node* next = NULL;
+    Node* head = list->head;
 
-    while (list->head)
+    while (head)
     {
-        next = list->head->next;
-        free(list->head);
-        list->head = next;
+        next = head->next;
+        free(head);
+        head = next;
     }
 
-}
+};
 
 
-/*Удаление одного узла*/     
+/*Удаление одного узла*/
 
 void list_delete_node(Node* node)
 {
-	if (node)
-	{
-		Node* next = node->next;
-		Node* prev = node->prev;
+    if (node)
+    {
+        Node* next = node->next;
+        Node* prev = node->prev;
 
-		free(node);
+        free(node);
 
-		if (prev)
-			prev->next = next;
+        if (prev)
+            prev->next = next;
 
-		if (next)
-			next->prev = prev;
+        if (next)
+            next->prev = prev;
 
-	}
+    }
 
-}
+};
 
 
-/*Добавление узла в начало списка*/     
+/*Добавление узла в начало списка*/
 
 int list_prepend(List* list)
 {
     Node* node;
 
     if (!list)
-        return -1;
+        return 1;
 
     node = list_create_node();
 
     if (!node)
-        return -1;
+        return 2;
 
     node->next = list->head;
     list->head = node;
-
-    return 0;
-}
+};
 
 
-/*Добавление узла в конец списка*/      
+/*Добавление узла в конец списка*/
 
-Node* list_append(List* list)
+int list_append(List* list)
 {
     Node* node;
 
     if (!list)
-        return 0;
+        return 3;
 
     node = list_create_node();
 
     if (!node)
-        return 0; 
+        return 4;
 
     node->prev = list->tail;
     list->tail = node;
-
-    return node;
-}
+};
 
 
 /*Вставка узла в список;
-insnode - узел из списка, после которого    
+insnode - узел из списка, после которого
 мы вставляем новый узел*/
 
 void list_insert(Node* insnode, Node* newnode)
@@ -193,9 +184,9 @@ void list_insert(Node* insnode, Node* newnode)
     if (newnode->next)
         newnode->next->prev = newnode;
 
-}
+};
 
-/*считает и выводит номер удаляемого узла в списке и 
+/*считает и выводит номер удаляемого узла в списке и
 удаляет узел по его номеру проходясь по списку*/
 
 void delete_node_by_number(List* list)
@@ -219,37 +210,37 @@ void delete_node_by_number(List* list)
         k++;
         node = node->next;
     }
-}
+};
 
-void list_insert_using_list(List* list)
+/*То же самое, что и list_insert, но получает на вход указатель на список*/
+void list_insert_node(List* list)
 {
     int i;
-    list_out(list);
     Node* newnode = list_create_node();
-    
+    Node* head = list->head;
+
+    list_out(list);
+
+
     printf("Give the number of element after which you want to insert new node\t");
     scanf("%d", &i);
 
-    for(int k = 0; k < i; k++)
-    {
-        list->head = list->head->next;
-    }
 
-    Node* insnode = list->head;
+    for (int k = 0; k < i; k++)
+        head = head->next;
+
+    Node* insnode = head;
     list_insert(insnode, newnode);       /* хз какого типа первый аргумент */
-}
+};
 
 
 /*Взаимодействие с программой в реальном времени*/
 
-int choice()
+void choice(void)
 {
-    int i = 0;
-    int sign, k;
-
-    List* list;
-    list_init(list);
-
+    int i = 0, k = 0;
+    int sign = 1;
+    List* list = list_create();
 
     while (1)
     {
@@ -261,89 +252,86 @@ int choice()
         printf("Enter 5 to prepend node\n");
         printf("Enter 6 to append\n");
         printf("Enter 7 to insert node\n");
-        printf("Enter 8 to check if list is empty\n");
+        printf("Enter 8 to check if list is empty\n\n");
 
         scanf("%d", &sign);
-        
-		if (sign == 0)
-        {
-            printf("Program finished\n");
-            return 0;
-        }
-        if (sign == 1)  /* недоделано */
-        {
-            i++;
-            printf("Enter the number to put it into new node\n");
-            Node* node = list_create_node();
-            printf("Node %d created", i);
-		
-            if (!node->prev)    /*Если пред. перед новым узлу узел равен NULL - то на него указывает head*/
-            
-                list->head = node; 
-                
-            else if (!node->next)       /*Если след. после нового узла узел равен NULL - то на него указывает tail*/
-            
-                list->tail = node; 
-                
-            /* мб else надо добавить */
-            
-        }
 
-        if (sign == 2)
+        switch (sign)
         {
+        case 0:
+
+            printf("Program finished\n");
+            list_delete(list);
+            return 5;
+
+        case 1:
+
+            i++;
+            Node* node = list_create_node();
+            printf("Node %d created with value %d\n", i, node->value);
+
+            if (node->prev == NULL)    /*Если пред. перед новым узлу узел равен NULL - то на него указывает head*/
+
+                list->head = node;
+
+            else if (!node->next)       /*Если след. после нового узла узел равен NULL - то на него указывает tail*/
+
+                list->tail = node;
+
+            break;
+
+        case 2:
+
             printf("Your list:\n");
             list_out(list);
-        }
+            break;
 
-        if (sign == 3)
-        {
+        case 3:
+
             printf("Are you sure to delete the list? (1 - yes, 0 - no)\t");
             scanf("%d", &k);
             if (k == 1)
                 list_delete(list);
-        }
+            break;
 
-        if (sign = 4)
-        {
+
+        case 4:
+
             printf("Are you sure to delete the node? (1 - yes, 0 - no)\t");
-            scanf("%d", &k);   
+            scanf("%d", &k);
             if (k == 1)
                 delete_node_by_number(list);
-        }
+            break;
 
-        if (sign == 5)
-        {
-            printf("Enter number to put it itno new node\t");
+
+        case 5:
+
             list_prepend(list);
             printf("New node added into beginning of list\n");
-        }
+            break;
 
-        if (sign == 6)
-        {    
-            printf("Enter number to put into new node\t");
+
+        case 6:
+
             list_append(list);
             printf("New node added into the end of list\n");
-        }
+            break;
 
-        if (sign == 7)
-        {
-            list_insert_using_list(list);
+        case 7:
+
+            list_insert_node(list);
             printf("Node is inserted\n");
-        }
+            break;
 
-	if (sign == 8)
-        {
-            int n = list_is_empty(list);
-            if (!n)
-                pritnf("Error of displaying list");
-        }
+        case 8:
 
-        else
-        {
+            list_is_empty(list);
+            break;
+
+        default:
+
             printf("Try again, put there numbers to choose something\n");
+            break;
         }
-        
     }
-    return 0;
-    
-}
+};
