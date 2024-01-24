@@ -1,17 +1,13 @@
-#include "list.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-
+#include "list.h"
 /*Объявляет структуру типа Node*/
-
-struct Node
+typedef struct Node
 {
     struct Node* next;
     struct Node* prev;
     int value;
 };
-
 /*Объявляет структуру типа List*/
 typedef struct List
 {
@@ -20,14 +16,12 @@ typedef struct List
 }List;
 
 /*Создает список*/
-
 List* list_create()
 {
     List* list = (List*)malloc(sizeof(List));
     list_init(list);
     return list;
-};
-
+}
 
 /*Проверка на пустоту списка;
 1 - если список пуст, 2 - если в списке что-то есть
@@ -35,14 +29,11 @@ List* list_create()
 
 void list_is_empty(List* list)
 {
-    Node* node = list->head;
-    if (node == NULL)
+    if (list->head == NULL)
         printf("Your list is empty\n");
     else
         printf("Your list isn't empty\n");
-
-};
-
+}
 
 /*Началу и концу списка присваивается NULL*/
 
@@ -53,46 +44,36 @@ void list_init(List* list)
         list->head = NULL;
         list->tail = NULL;
     }
-
-};
-
+}
 
 /*Создаем новый узел*/
 
 Node* list_create_node()
 {
     int data;
-
-    printf("Give the value to put it into new node\t");
+    printf("Give the value to put it into new node\t"); ///мб реализовать номера узлов сразу тут?
     scanf("%d", &data);
-
     Node* node = (Node*)malloc(sizeof(Node));
-
     if (node)
     {
         node->prev = NULL;
         node->next = NULL;
         node->value = data;
     }
-
-    return node;
-};
-
-
-/*Вывод списка*/
+}
 
 void list_out(List* list)
 {
     int i = 0;
     Node* head = list->head;
-    while (head)
+
+    while (head != NULL)
     {
-        printf("node %d: %d\n", i, head->value);
+        printf("node %d: %d\n", i, head->value);    ///бесконечное тк у tail->next нету похоже указателя на null
         head = head->next;
+        i++;
     }
-
-};
-
+}
 
 /*Удаление всего списка*/
 void list_delete(List* list)
@@ -106,9 +87,7 @@ void list_delete(List* list)
         free(head);
         head = next;
     }
-
-};
-
+}
 
 /*Удаление одного узла*/
 
@@ -126,49 +105,55 @@ void list_delete_node(Node* node)
 
         if (next)
             next->prev = prev;
-
     }
-
-};
-
+}
 
 /*Добавление узла в начало списка*/
 
 int list_prepend(List* list)
 {
     Node* node;
-
-    if (!list)
-        return 1;
-
     node = list_create_node();
 
-    if (!node)
-        return 2;
+    if (list->head == NULL)
+        list->head = node;
 
-    node->next = list->head;
-    list->head = node;
-};
+    if (list->tail = NULL)
+        list->tail = node;
 
+    if (list)
+    {
+        node->next = list->head;
+        list->head = node;
+    }
+
+    return 0;
+}
 
 /*Добавление узла в конец списка*/
 
 int list_append(List* list)
 {
     Node* node;
-
-    if (!list)
-        return 3;
-
     node = list_create_node();
 
     if (!node)
-        return 4;
+        return -1;
 
-    node->prev = list->tail;
-    list->tail = node;
-};
+    if (!list->head)
+        list->head = node; ///может это перенести в создание узла?
 
+    else if (!list->tail)
+        list->tail = node;
+
+    if (list)
+    {
+        node->prev = list->tail;
+        list->tail = node;
+    }
+
+    return 0;
+}
 
 /*Вставка узла в список;
 insnode - узел из списка, после которого
@@ -178,65 +163,89 @@ void list_insert(Node* insnode, Node* newnode)
 {
     newnode->next = insnode->next;
     newnode->prev = insnode;
-
     insnode->next = newnode;
 
     if (newnode->next)
         newnode->next->prev = newnode;
-
-};
+}
 
 /*считает и выводит номер удаляемого узла в списке и
 удаляет узел по его номеру проходясь по списку*/
 
 void delete_node_by_number(List* list)
 {
-    int i = 0, k = 0;
+    int i, k = 0;
     Node* node = list->head;
-
     list_out(list);
-
-    printf("Give the number of deleting element\t");    /* мб вынести это в отдельную функцию */
+    printf("Give the number of deleting element\t"); /* мб вынести это в отдельную функцию */
     scanf("%d", &i);
-
     while (node)
     {
+
         if (k == i)
         {
+            if (node == list->head)
+                list->head = node->next;
+
+            else if (node == list->tail)
+                list->tail = node->prev;
+
+
             list_delete_node(node);
+
             break;
         }
 
-        k++;
         node = node->next;
+        k++;
     }
-};
+}
 
-/*То же самое, что и list_insert, но получает на вход указатель на список*/
 void list_insert_node(List* list)
 {
     int i;
+    list_out(list);
     Node* newnode = list_create_node();
     Node* head = list->head;
 
     list_out(list);
-
-
     printf("Give the number of element after which you want to insert new node\t");
     scanf("%d", &i);
 
-
-    for (int k = 0; k < i; k++)
+    for (int k = 0; k < (i - 1); k++)
         head = head->next;
 
     Node* insnode = head;
-    list_insert(insnode, newnode);       /* хз какого типа первый аргумент */
-};
+    list_insert(insnode, newnode);
+}
 
+void swap(List* list)
+{
+    int data, n1, n2;
+    Node* node1 = list->head;
+    Node* node2 = list->head;
+
+    printf("Choose first node to swap\n");
+    scanf("%d", &n1);
+
+    for (int j = 0; j < n1; j++)
+        node1 = node1->next;
+
+    printf("Choose second node to swap\n");
+    scanf("%d", &n2);
+
+    for (int h = 0; h < n1; h++)
+        node2 = node2->next;
+
+    data = node1->value;
+    node1->value = node2->value;
+    node2->value = data;
+
+}
 
 /*Взаимодействие с программой в реальном времени*/
 
-void choice(void)
+int choice()
 {
     int i = 0, k = 0;
     int sign = 1;
@@ -245,7 +254,7 @@ void choice(void)
     while (1)
     {
         printf("Enter 0 to finish the program\n");
-        printf("Enter 1 to create new node\n");
+        printf("Enter 1 to swap two nodes\n");
         printf("Enter 2 to display list's values\n");
         printf("Enter 3 to delete list\n");
         printf("Enter 4 to delete node\n");
@@ -259,29 +268,15 @@ void choice(void)
         switch (sign)
         {
         case 0:
-
             printf("Program finished\n");
             list_delete(list);
             return 5;
 
         case 1:
-
-            i++;
-            Node* node = list_create_node();
-            printf("Node %d created with value %d\n", i, node->value);
-
-            if (node->prev == NULL)    /*Если пред. перед новым узлу узел равен NULL - то на него указывает head*/
-
-                list->head = node;
-
-            else if (!node->next)       /*Если след. после нового узла узел равен NULL - то на него указывает tail*/
-
-                list->tail = node;
-
+            swap(list);
             break;
 
         case 2:
-
             printf("Your list:\n");
             list_out(list);
             break;
@@ -294,7 +289,6 @@ void choice(void)
                 list_delete(list);
             break;
 
-
         case 4:
 
             printf("Are you sure to delete the node? (1 - yes, 0 - no)\t");
@@ -303,13 +297,11 @@ void choice(void)
                 delete_node_by_number(list);
             break;
 
-
         case 5:
 
             list_prepend(list);
-            printf("New node added into beginning of list\n");
+            printf("New node added into beginning of list\n"); /*как и с append переделать i переменную для подсчета узлов*/
             break;
-
 
         case 6:
 
@@ -334,4 +326,4 @@ void choice(void)
             break;
         }
     }
-};
+}
