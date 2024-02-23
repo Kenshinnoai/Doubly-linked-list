@@ -3,42 +3,42 @@
 #include <assert.h>
 #include "list.h"
 
-/* Объявляет структуру типа Node */
-typedef struct Node
+typedef struct Node             /* структура, описывающая тип элементов списка */
 {
+
     struct Node* next;
     struct Node* prev;
     int value;
-};
 
-/* Объявляет структуру типа List */
-typedef struct List
+} Node;
+
+
+typedef struct List             /* структура, описывающая тип списка */
 {
+
     Node* head;
     Node* tail;
+
 } List;
 
-/* Создает список */
-List* list_create(void)
+
+                /* Далее - вспомогательные функции */
+
+/***************************************************************************/
+
+
+
+List* list_create(void)                     /* создание списка */
 {
     List* list = (List*)malloc(sizeof(List));
+    
     list_init(list);
+    
     return list;
 }
 
-/* Проверка на пустоту списка;
- * 1 - если список пуст, 2 - если в списке что-то есть
- * в функцию передаём весь список
- */
-int list_is_empty(List* list)
-{
-    assert(list);
 
-    return list->head == NULL;
-}
-
-/* Началу и концу списка присваивается NULL */
-void list_init(List* list)
+void list_init(List* list)                  /* инициализация списка */
 {
     if (list)
     {
@@ -47,13 +47,9 @@ void list_init(List* list)
     }
 }
 
-/*Создаем новый узел*/
 
-Node* list_create_node()
+Node* list_create_node()                    /* создание нового узла */
 {
-    //int data;
-    //printf("Give the value to put it into new node\t"); ///мб реализовать номера узлов сразу тут?
-    //scanf("%d", &data);
 
     Node* node = (Node*)malloc(sizeof(Node));
 
@@ -65,21 +61,148 @@ Node* list_create_node()
     }
 }
 
-void list_out(List* list)
-{
-    int i = 0;
-    Node* head = list->head;
 
-    while (head != NULL)
+int list_is_empty(List* list)               /* проверка на пустоту списка */
+{
+    assert(list);
+
+    return list->head == NULL;
+}
+
+
+int getNumber()                         /* получение числа от пользователя */
+{
+    int num;
+    
+    printf("Enter the value: \t");
+
+    scanf("%d", &num);
+
+    printf("\n");
+
+    return num;
+}
+
+
+ 
+        /* Далее - функии для взаимодействий с пользователем */
+
+/***************************************************************************/
+
+
+
+int list_prepend(List* list, int value)     /* добавление нового узла в начало списка */
+{
+    Node* node = list_create_node();
+    
+    if (!node)
+        return -1;
+
+    node->value = value;
+
+    if (list->head == NULL)
     {
-        printf("node %d: %d\n", i, head->value);    ///бесконечное тк у tail->next нету похоже указателя на null
-        head = head->next;
-        i++;
+        assert(list->tail == NULL);
+        list->head = node;
+        list->tail = node;
+    }
+    
+    else
+    {
+        node->next = list->head;
+        list->head->prev = node;
+        list->head = node;
+    }
+
+    return 0;
+}
+
+
+int list_append(List* list, int value)  /* добавление нового узла в конец списка */
+{
+    Node* node = list_create_node();
+    
+    if (!node)
+        return -1;
+
+    node->value = value;
+
+    if (list->head == NULL)
+    {
+        assert(list->tail == NULL);
+        list->head = node;
+        list->tail = node;
+    }
+    
+    else
+    {
+        node->prev = list->tail;
+        list->tail->next = node;
+        list->tail = node;
+        node->next = NULL;
+    }
+    
+    return 0;
+}
+
+
+void list_delete_node(List* list)       /* удаление узла из списка */
+{
+    int num, k = 0;
+    Node* node = list->head;
+
+    printf("Enter ID of deleting node\t");
+
+    scanf("%d", &num);
+
+
+    while (node)
+    {
+        if (k == num)
+        {
+            if (node == list->head)
+            {
+                list->head = node->next;
+                
+                free(node);
+                
+            }
+            
+            else if (node == list->tail)
+            {
+                list->tail = node->prev;
+                
+                free(node);
+                
+            }
+            
+            else
+            {
+                if (node->prev != NULL)
+                
+                    node->prev->next = node->next;
+
+
+                if (node->next != NULL)
+                
+                    node->prev->prev = node->prev;
+
+
+                free(node);
+                printf("Node %d deleted\n\n", num);
+            }
+            
+            break;
+        }
+        
+        k++;
+        node = node->next;
+        
     }
 }
 
-/*Удаление всего списка*/
-void list_delete(List* list)
+
+void list_delete(List* list)            /* удаление передаваемого списка */
 {
     Node* next = NULL;
     Node* head = list->head;
@@ -90,163 +213,71 @@ void list_delete(List* list)
         free(head);
         head = next;
     }
+    
+    list->head = list->tail = NULL;
 }
 
-/*Удаление одного узла*/
 
-void list_delete_node(Node* node)
+void list_out(List* list)               /* вывод всех значений элементов списка */
 {
-    if (node)
-    {
-        Node* next = node->next;
-        Node* prev = node->prev;
-
-        free(node);
-
-        if (prev)
-            prev->next = next;
-
-        if (next)
-            next->prev = prev;
-    }
-}
-
-/*Добавление узла в начало списка*/
-
-int list_prepend(List* list, int value)
-{
-    Node* node = list_create_node();
-    if (!node)
-        return -1;
-
-    node->value = value;
-
-    if (list->head == NULL)
-    {
-        assert(list->tail == NULL);
-        list->head = node;
-        list->tail = node;
-    }
-    else
-    {
-        node->prev = NULL;
-        node->next = list->head;
-        list->head = node;
-    }
-
-    return 0;
-}
-
-/*Добавление узла в конец списка*/
-
-int list_append(List* list, int value)
-{
-    Node* node = list_create_node();
-    if (!node)
-        return -1;
-
-    node->value = value;
-
-    if (list->head == NULL)
-    {
-        assert(list->tail == NULL);
-        list->head = node;
-        list->tail = node;
-    }
-    else
-    {
-        node->prev = list->tail;
-        node->next = NULL;
-        list->tail = node;
-    }
-
-    return 0;
-}
-
-/*Вставка узла в список;
-insnode - узел из списка, после которого
-мы вставляем новый узел*/
-
-void list_insert(Node* insnode, Node* newnode)
-{
-    newnode->next = insnode->next;
-    newnode->prev = insnode;
-    insnode->next = newnode;
-
-    if (newnode->next)
-        newnode->next->prev = newnode;
-}
-
-/*считает и выводит номер удаляемого узла в списке и
-удаляет узел по его номеру проходясь по списку*/
-
-void delete_node_by_number(List* list)
-{
-    int i, k = 0;
-    Node* node = list->head;
-    list_out(list);
-    printf("Give the number of deleting element\t"); /* мб вынести это в отдельную функцию */
-    scanf("%d", &i);
-    while (node)
-    {
-
-        if (k == i)
-        {
-            if (node == list->head)
-                list->head = node->next;
-
-            else if (node == list->tail)
-                list->tail = node->prev;
-
-
-            list_delete_node(node);
-
-            break;
-        }
-
-        node = node->next;
-        k++;
-    }
-}
-
-void list_insert_node(List* list)
-{
-    int i;
-    list_out(list);
-    Node* newnode = list_create_node();
+    int i = 0;
+    
     Node* head = list->head;
 
-    list_out(list);
-    printf("Give the number of element after which you want to insert new node\t");
-    scanf("%d", &i);
-
-    for (int k = 0; k < (i - 1); k++)
+    while (head)
+    {
+        printf("node %d: %d\n", i, head->value);
+        
         head = head->next;
-
-    Node* insnode = head;
-    list_insert(insnode, newnode);
+        
+        i++;
+    }
+    
+    if (list->head == NULL)
+    
+        printf("The list is empty\n");
+        
+    printf("\n");
 }
 
-void swap(List* list)
+
+void swap(List* list)                   /* обмен значениями двух элементов списка */ 
 {
     int data, n1, n2;
+    
     Node* node1 = list->head;
     Node* node2 = list->head;
-
+    
+    
     printf("Choose first node to swap\n");
-    scanf("%d", &n1);
-
-    for (int j = 0; j < n1; j++)
-        node1 = node1->next;
-
+    scanf("%d", &n1);  
+    
+    
+    if (n1 != 0)
+    {
+        for (int j = 0; j < n1; j++)
+            node1 = node1->next;
+    }
+    
+    
+    printf("node1 = %d\n", node1->value);
+    
+    
     printf("Choose second node to swap\n");
     scanf("%d", &n2);
-
-    for (int h = 0; h < n1; h++)
-        node2 = node2->next;
-
-    data = node1->value;
+    
+    
+    if (n2 != 0)
+    {
+        for (int h = 0; h < n2; h++)
+            node2 = node2->next;
+    }
+    
+    
+    printf("node2 = %d\n", node2->value);
+    
+    
+    data = node1->value; 
     node1->value = node2->value;
     node2->value = data;
-
 }
